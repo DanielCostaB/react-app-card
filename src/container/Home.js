@@ -3,6 +3,7 @@ import React from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Group from "../component/Grupo";
 import GrupoVazio from "../component/GrupoVazio";
+import firebase from "../util/firebase";
 
 export default class Home extends React.Component {
 
@@ -41,7 +42,7 @@ export default class Home extends React.Component {
   };
 
   addGrupo = nome => {
-    const { grupos } = this.state;
+    const { grupos } = firebase.database().ref(this.state);
     grupos.push({
       id: uuid(),
       name: nome,
