@@ -3,7 +3,7 @@ import React from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Group from "../component/Grupo";
 import GrupoVazio from "../component/GrupoVazio";
-import firebase from "../util/firebase";
+import { firebase } from "../services/firebase";
 
 export default class Home extends React.Component {
 
@@ -42,25 +42,29 @@ export default class Home extends React.Component {
   };
 
   addGrupo = nome => {
-    const { grupos } = firebase.database().ref(this.state);
+   const databaseCardGrupo = firebase.database().ref("Card_Group")
+    const { grupos } = this.state;
     grupos.push({
       id: uuid(),
       name: nome,
       items: [],
     });
     this.setState({ ...this.state, grupos });
+    databaseCardGrupo.push(grupos);
   }
 
   addItem = (groupId, label) => {
+    const databaseCardItem = firebase.database().ref("Card_Group")
     const { grupos } = this.state;
     const grupo = grupos.find(g => g.id === groupId);
     if (!!grupo) {
       grupo.items.push({ content: label, id: uuid(), grupo: groupId });
     }
     this.setState({ ...this.state, grupos });
+    databaseCardItem.push(grupo);
   }
 
-  editGroup = (groupId, name) => {
+   editGroup = (groupId, name) => {
     const { grupos } = this.state;
     const grupo = grupos.find(g => g.id === groupId);
     if (!!grupo) {
