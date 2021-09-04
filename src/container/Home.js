@@ -1,8 +1,8 @@
 import { uuid } from 'uuidv4';
 import React from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import Group from "../component/Grupo";
-import GrupoVazio from "../component/GrupoVazio";
+import Group from "../component/Grupos/Grupo";
+import GrupoVazio from "../component/Grupos/GrupoVazio";
 import { firebase } from "../services/firebase";
 
 export default class Home extends React.Component {
@@ -83,6 +83,29 @@ export default class Home extends React.Component {
     this.setState({ ...this.state, grupos });
   }
 
+  deleteGrupo = nome => {
+    const databaseCardGrupo = firebase.database().ref("Card_Group")
+     const { grupos } = this.state;
+     grupos.delete({
+       id: uuid(),
+       name: nome,
+       items: [],
+     });
+     this.setState({ ...this.state, grupos });
+     databaseCardGrupo.delete(grupos);
+   }
+ 
+   deleteItem = (groupId, label) => {
+     const databaseCardItem = firebase.database().ref("Card_Group")
+     const { grupos } = this.state;
+     const grupo = grupos.find(g => g.id === groupId);
+     if (!!grupo) {
+       grupo.items.delete({ content: label, id: uuid(), grupo: groupId });
+     }
+     this.setState({ ...this.state, grupos });
+     databaseCardItem.delete(grupo);
+   }
+
   render() {
     const { grupos: groups } = this.state;
     return <div style={{ display: 'flex', overflow: 'auto', maxHeight: '100vh' }}>
@@ -94,11 +117,13 @@ export default class Home extends React.Component {
         flexWrap: 'nowrap',
       }}
       >
+        
         <DragDropContext onDragEnd={this.onDragEnd}>
           {!!groups && groups.length > 0
             && groups.map(g => <Group key={`outer-group-${g.id}`} grupo={g} items={g.items} onAddItem={this.addItem} onEditGroup={this.editGroup} onEditItem={this.editItem} />)}
           <GrupoVazio onAction={this.addGrupo} />
         </DragDropContext>
+        
       </div>
     </div>;
   }

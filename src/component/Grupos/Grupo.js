@@ -1,5 +1,6 @@
 import { Paper, makeStyles, InputAdornment, IconButton, OutlinedInput, Typography } from '@material-ui/core';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { useState } from 'react';
 
@@ -30,7 +31,7 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
   const [itemLabel, setItemLabel] = useState('');
   const [editGroup, setEditGroup] = useState(false);
   const [editItem, setEditItem] = useState({});
-
+  
   const classes = useStyles();
 
   const grid = 8;
@@ -91,10 +92,13 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
               value={grupo.name}
               onKeyDown={saveGroup}
               onChange={({ target }) => {
-                onEditGroup(grupo.id, target.value)
-              }}
-            />
-          :<Typography className={classes.titulo} variant="h6" component="h2" color="primary" onClick={() => setEditGroup(!editGroup)}>{grupo.name}</Typography>
+              onEditGroup(grupo.id, target.value)             
+              }} 
+              
+            /> 
+          :<Typography className={classes.titulo} variant="h6" component="h2" color="primary" onClick={() => setEditGroup(!editGroup)}>
+            {grupo.name}<IconButton style={{float: 'right', color: '#7159c1'}} aria-label="delete" size="small" disabled ><DeleteIcon /></IconButton>
+            </Typography>
         }
         {items && items.map((item, index) => (
           <Draggable
@@ -122,8 +126,10 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
                   />
                   : <span className={classes.item} onClick={() => setEditItem(item)}>{item.content}</span>
                 }
+                
               </Paper>
             )}
+            
           </Draggable>
         ))}
         {provided.placeholder}
@@ -141,8 +147,10 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
               >
                 <AddIcon />
               </IconButton>
+              
             </InputAdornment>}
         />
+        
       </Paper>
     )}
   </Droppable>
