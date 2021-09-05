@@ -2,7 +2,7 @@ import { Paper, makeStyles, InputAdornment, IconButton, OutlinedInput, Typograph
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   coluna: {
@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => ({
   },
   item: {
     cursor: 'pointer',
+    display: 'inline-block', 
+    width: '85%',
   },
   titulo: {
     cursor: 'pointer',
@@ -23,10 +25,32 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+    position: 'relative',
+  },
+  removeGroup: {
+    //float: 'right',
+    position: 'absolute',
+    right: '10px',
+    top: '10px',
+    color: '#ACA8F5',
+  },
+  removeItem: {
+    //float: 'right',
+    position: 'absolute',
+    right: '0',
+    top: '-5px',
   }
+
 }));
 
-export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEditGroup = (id, name) => {}, onEditItem = (item, name) => {} }) {
+export default function Grupo({ 
+  grupo, 
+  items = [], 
+  onAddItem = () => { }, 
+  onEditGroup = (id, name) => {}, 
+  onEditItem = (item, name) => {},
+  onRemoveGroup = id => {},
+  onRemoveItem = item => {}}) {
 
   const [itemLabel, setItemLabel] = useState('');
   const [editGroup, setEditGroup] = useState(false);
@@ -64,19 +88,19 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
     }
   }
 
-  const keyPress = (e) => {
+  const keyPress = e => {
     if (e.keyCode === 13) {
       saveItem();
     }
   }
 
-  const saveGroup = (e) => {
+  const saveGroup = e => {
     if (e.keyCode === 13) {
       setEditGroup(!editGroup);
     }
   }
 
-  const persistItem = (e) => {
+  const persistItem = e => {
     if (e.keyCode === 13) {
       setEditItem(!editGroup);
     }
@@ -84,7 +108,7 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
 
   return <Droppable droppableId={grupo.id}>
     {(provided, snapshot) => (
-      <Paper ref={provided.innerRef} className={classes} style={getListStyle(snapshot.isDraggingOver)} key={`group-${grupo.id}`}>
+      <Paper ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)} key={`group-${grupo.id}`}>
         {editGroup
           ? <OutlinedInput
               id="outlined-basic"
@@ -96,9 +120,12 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
               }} 
               
             /> 
-          :<Typography className={classes.titulo} variant="h6" component="h2" color="primary" onClick={() => setEditGroup(!editGroup)}>
-            {grupo.name}<IconButton style={{float: 'right', color: '#7159c1'}} aria-label="delete" size="small" disabled ><DeleteIcon /></IconButton>
+          :<div style={{ position: 'relative' }}>
+            <Typography className={classes.titulo} variant="h6" component="h2" color="primary" onClick={() => setEditGroup(!editGroup)}>
+            {grupo.name}
             </Typography>
+            <IconButton onClick={e => onRemoveGroup(grupo.id)} className={classes.removeGroup} aria-label="delete" size="small"><DeleteIcon /></IconButton>
+          </div>
         }
         {items && items.map((item, index) => (
           <Draggable
@@ -120,11 +147,13 @@ export default function Grupo({ grupo, items = [], onAddItem = () => { }, onEdit
                     fullWidth
                     value={editItem.content}
                     onKeyDown={persistItem}
-                    onChange={({ target }) => {
-                      onEditItem(item, target.value)
-                    }}
+                    onBlur={({ target }) => onEditItem(item, target.value)}
+                    onChange={({ target }) => onEditItem(item, target.value)}
                   />
-                  : <span className={classes.item} onClick={() => setEditItem(item)}>{item.content}</span>
+                  : <div style={{ position: 'relative' }}>
+                      <span className={classes.item} onClick={() => setEditItem(item)}>{item.content}</span>
+                      <IconButton onClick={() => onRemoveItem(item)} className={classes.removeItem} aria-label="delete" size="small"><DeleteIcon /></IconButton>
+                    </div>
                 }
                 
               </Paper>
