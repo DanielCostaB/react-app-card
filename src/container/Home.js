@@ -37,8 +37,17 @@ export default class Home extends React.Component {
 
       if (!!src && !!dst) {
         const item = src.items[source.index];
-        dst.items.splice(destination.index, 0, item);
+        
+        if (!dst.hasOwnProperty("items")) {
+          dst.items = [];
+          item.grupo = destination.droppableId;
+          dst.items.push(item);
+        } else {
+          dst.items.splice(destination.index, 0, item);
+        }
+
         src.items.splice(source.index, 1);
+
         databaseCardItem.child(src.id).set({ ...src });
         databaseCardItem.child(dst.id).set({ ...dst });
       }
@@ -102,6 +111,7 @@ export default class Home extends React.Component {
     const grupo = grupos.find(g => g.id === item.grupo);
     if (!!grupo) {
       const index = grupo.items.findIndex(i => i.id === item.id);
+      //console.log(grupo);
       if (index >= 0) {
         grupo.items.splice(index, 1);
       }

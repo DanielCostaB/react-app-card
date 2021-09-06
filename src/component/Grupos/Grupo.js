@@ -50,7 +50,8 @@ export default function Grupo({
   onEditGroup = (id, name) => {}, 
   onEditItem = (item, name) => {},
   onRemoveGroup = id => {},
-  onRemoveItem = item => {}}) {
+  onRemoveItem = item => {}
+}) {
 
   const [itemLabel, setItemLabel] = useState('');
   const [editGroup, setEditGroup] = useState(false);
