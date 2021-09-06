@@ -6,8 +6,8 @@ export const Container = styled.div`
 
   height: 70px;
   padding: 0 30px;
-  background: #7159c1;
-  color: #FFF;
+  background: #283593;
+  color: #eceff1;
   display: flex;
   align-items: center;
 

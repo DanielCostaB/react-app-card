@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     width: '250px',
     padding: '10px'
   },
+
 }));
 
 export default function GrupoVazio({ onAction = () => { } }) {

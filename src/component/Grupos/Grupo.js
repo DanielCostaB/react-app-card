@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   titulo: {
     cursor: 'pointer',
-    backgroundColor: '#512da8',
+    backgroundColor: '#3949ab',
     color: 'white',
     borderRadius: '5px',
     marginBottom: '10px',
@@ -32,13 +32,14 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     right: '10px',
     top: '10px',
-    color: '#ACA8F5',
+    color: '#c5cae9',
   },
   removeItem: {
     //float: 'right',
     position: 'absolute',
     right: '0',
     top: '-5px',
+    color: '#9e9e9e',
   }
 
 }));
