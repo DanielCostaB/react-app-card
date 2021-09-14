@@ -43,6 +43,7 @@ export default class Home extends React.Component {
           item.grupo = destination.droppableId;
           dst.items.push(item);
         } else {
+          item.grupo = destination.droppableId;
           dst.items.splice(destination.index, 0, item);
         }
 
